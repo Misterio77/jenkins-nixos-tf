@@ -3,7 +3,9 @@
   config,
   terraformArgs,
   ...
-}: {
+}: let
+  toYAML = content: toString ((pkgs.formats.yaml {}).generate "config.yaml" content);
+in {
   imports = [../common];
 
   services.jenkins = {
@@ -12,7 +14,7 @@
       "-Djenkins.install.runSetupWizard=false"
     ];
     environment = {
-      CASC_JENKINS_CONFIG = (pkgs.formats.yaml {}).generate "config.yaml" {
+      CASC_JENKINS_CONFIG = toYAML {
         # TODO
       };
     };

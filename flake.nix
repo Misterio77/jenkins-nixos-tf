@@ -5,7 +5,7 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = {nixpkgs, ...} @ flakeInputs: {
+  outputs = {nixpkgs, ...} @ flakeInputs: rec {
     nixosConfigurations = {
       master = nixpkgs.lib.nixosSystem {
         modules = [
@@ -26,5 +26,6 @@
         };
       };
     };
+    packages.x86_64-linux.default = nixosConfigurations.master.config.system.build.vm;
   };
 }
