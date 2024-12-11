@@ -8,18 +8,7 @@
   outputs = {nixpkgs, ...} @ flakeInputs: rec {
     nixosConfigurations = {
       master = nixpkgs.lib.nixosSystem {
-        modules = [
-          ./nixos/master
-        ];
-        specialArgs = {
-          inherit flakeInputs;
-          terraformArgs = {};
-        };
-      };
-      slave = nixpkgs.lib.nixosSystem {
-        modules = [
-          ./nixos/slave
-        ];
+        modules = [./nixos/master];
         specialArgs = {
           inherit flakeInputs;
           terraformArgs = {};

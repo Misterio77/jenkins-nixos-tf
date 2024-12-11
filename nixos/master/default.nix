@@ -3,21 +3,41 @@
   config,
   terraformArgs,
   ...
-}: let
-  toYAML = content: toString ((pkgs.formats.yaml {}).generate "config.yaml" content);
-in {
+}: {
   imports = [../common];
 
   services.jenkins = {
     enable = true;
-    extraJavaOptions = [
-      "-Djenkins.install.runSetupWizard=false"
-    ];
-    environment = {
-      CASC_JENKINS_CONFIG = toYAML {
-        # TODO
+    settings = {
+      jenkins = {
+        securityRealm.local = {
+          allowsSingup = false;
+          users = [
+            {
+              id = "gabriel";
+              password = "\${file:/var/lib/secrets/jenkins-gabriel-password}";
+            }
+          ];
+        };
+        authorizationStrategy.roleBased.roles.global = [
+          {
+            name = "admin";
+            permissions = ["Overall/Administer"];
+            entries = [
+              {user = "gabriel";}
+            ];
+          }
+          {
+            name = "readonly";
+            permissions = ["Overall/Read" "Job/Read"];
+            entries = [
+              {group = "authenticated";}
+            ];
+          }
+        ];
       };
     };
+    plugins = import ./jenkins-plugins.nix {inherit (pkgs) stdenv fetchurl;};
   };
 
   services.nginx.virtualHosts = {

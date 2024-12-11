@@ -1,5 +1,8 @@
 {terraformArgs, ...}: {
-  imports = [./hardware.nix];
+  imports = [
+    ./hardware.nix
+    ./jenkins-declarative.nix
+  ];
 
   services.openssh = {
     enable = true;
@@ -10,7 +13,7 @@
   };
 
   users.users.root = {
-    openssh.authorizedKeys.keys = terraformArgs.authorized_ssh_keys or [];
+    openssh.authorizedKeys.keys = terraformArgs.authorizedKeys or [];
   };
 
   services.nginx.enable = true;

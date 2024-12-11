@@ -1,0 +1,8 @@
+keys:
+  - &gabriel 7088C7421873E0DB97FF17C2245CAB70B4C225E9
+
+creation_rules:
+  - path_regex: secrets.yaml$
+    key_groups:
+    - pgp:
+      - *gabriel
